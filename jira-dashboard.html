@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jira Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .config-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            align-self: flex-end;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .issues-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .issue-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .issue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .issue-key {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .issue-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .issue-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .status.todo {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .status.in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.done {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .priority.high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .priority.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .priority.low {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .issue-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .issue-link:hover {
+            color: #5568d3;
+            text-decoration: underline;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Jira Dashboard</h1>
+            <form class="config-form" id="configForm">
+                <div class="form-group">
+                    <label for="jiraUrl">Jira URL</label>
+                    <input 
+                        type="url" 
+                        id="jiraUrl" 
+                        placeholder="https://your-domain.atlassian.net"
+                        value="https://your-domain.atlassian.net"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="jiraEmail">Email</label>
+                    <input 
+                        type="email" 
+                        id="jiraEmail" 
+                        placeholder="your-email@example.com"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="jiraToken">API Token</label>
+                    <input 
+                        type="password" 
+                        id="jiraToken" 
+                        placeholder="Your API token"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="jiraProject">Project Key (optional)</label>
+                    <input 
+                        type="text" 
+                        id="jiraProject" 
+                        placeholder="e.g., PROJ"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="jiraStatus">Status Filter (optional)</label>
+                    <select id="jiraStatus">
+                        <option value="">All Statuses</option>
+                        <option value="To Do">To Do</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Done">Done</option>
+                    </select>
+                </div>
+                <button type="submit" id="fetchBtn">Fetch Issues</button>
+            </form>
+        </header>
+
+        <div id="content">
+            <div class="empty-state">
+                <p>👋 Enter your Jira credentials and click "Fetch Issues" to get started</p>
+                <p style="font-size: 12px; margin-top: 20px;">
+                    💡 Get your API token: <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank" style="color: #667eea;">https://id.atlassian.com/manage-profile/security/api-tokens</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const configForm = document.getElementById('configForm');
+        const contentDiv = document.getElementById('content');
+        const fetchBtn = document.getElementById('fetchBtn');
+
+        configForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const jiraUrl = document.getElementById('jiraUrl').value.trim();
+            const jiraEmail = document.getElementById('jiraEmail').value.trim();
+            const jiraToken = document.getElementById('jiraToken').value.trim();
+            const projectKey = document.getElementById('jiraProject').value.trim();
+            const statusFilter = document.getElementById('jiraStatus').value;
+
+            if (!jiraUrl || !jiraEmail || !jiraToken) {
+                showError('Please fill in Jira URL, Email, and API Token');
+                return;
+            }
+
+            fetchBtn.disabled = true;
+            contentDiv.innerHTML = '<div class="loading">⏳ Fetching issues from Jira...</div>';
+
+            try {
+                const issues = await fetchJiraIssues(jiraUrl, jiraEmail, jiraToken, projectKey, statusFilter);
+                displayIssues(issues, jiraUrl);
+            } catch (error) {
+                showError(`Error: ${error.message}`);
+            } finally {
+                fetchBtn.disabled = false;
+            }
+        });
+
+        async function fetchJiraIssues(jiraUrl, email, token, projectKey, statusFilter) {
+            const cleanUrl = jiraUrl.endsWith('/') ? jiraUrl.slice(0, -1) : jiraUrl;
+            
+            let jql = '';
+            if (projectKey) {
+                jql = `project = ${projectKey}`;
+            }
+            if (statusFilter) {
+                jql += (jql ? ' AND ' : '') + `status = "${statusFilter}"`;
+            }
+
+            const query = jql ? `?jql=${encodeURIComponent(jql)}&maxResults=100` : '?maxResults=100';
+            const apiUrl = `${cleanUrl}/rest/api/3/search${query}`;
+
+            const credentials = btoa(`${email}:${token}`);
+
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Basic ${credentials}`,
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Unauthorized: Check your email and API token');
+                } else if (response.status === 404) {
+                    throw new Error('Jira instance not found: Check your URL');
+                } else {
+                    throw new Error(`Jira API error: ${response.status}`);
+                }
+            }
+
+            const data = await response.json();
+            return data.issues || [];
+        }
+
+        function displayIssues(issues, jiraUrl) {
+            if (issues.length === 0) {
+                contentDiv.innerHTML = `
+                    <div class="empty-state">
+                        <p>📭 No issues found matching your filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const cleanUrl = jiraUrl.endsWith('/') ? jiraUrl.slice(0, -1) : jiraUrl;
+
+            // Calculate stats
+            const stats = {
+                total: issues.length,
+                todo: issues.filter(i => i.fields.status.name === 'To Do').length,
+                inProgress: issues.filter(i => i.fields.status.name === 'In Progress').length,
+                done: issues.filter(i => i.fields.status.name === 'Done').length,
+            };
+
+            let html = `
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.total}</div>
+                        <div class="stat-label">Total Issues</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.todo}</div>
+                        <div class="stat-label">To Do</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.inProgress}</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.done}</div>
+                        <div class="stat-label">Done</div>
+                    </div>
+                </div>
+                <div class="issues-grid">
+            `;
+
+            issues.forEach(issue => {
+                const status = issue.fields.status.name;
+                const statusClass = status === 'To Do' ? 'todo' : status === 'In Progress' ? 'in-progress' : 'done';
+                
+                const priority = issue.fields.priority?.name || 'Medium';
+                const priorityClass = priority.toLowerCase();
+
+                const assignee = issue.fields.assignee?.displayName || 'Unassigned';
+                const dueDate = issue.fields.duedate ? new Date(issue.fields.duedate).toLocaleDateString() : 'N/A';
+
+                html += `
+                    <div class="issue-card">
+                        <div class="issue-key">${issue.key}</div>
+                        <div class="issue-title">${escapeHtml(issue.fields.summary)}</div>
+                        <div class="issue-meta">
+                            <div><strong>Status:</strong> <span class="status ${statusClass}">${status}</span></div>
+                            <div><strong>Priority:</strong> <span class="priority ${priorityClass}">${priority}</span></div>
+                            <div><strong>Assignee:</strong> ${escapeHtml(assignee)}</div>
+                            <div><strong>Due Date:</strong> ${dueDate}</div>
+                        </div>
+                        <a href="${cleanUrl}/browse/${issue.key}" target="_blank" class="issue-link">
+                            View in Jira →
+                        </a>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            contentDiv.innerHTML = html;
+        }
+
+        function showError(message) {
+            contentDiv.innerHTML = `
+                <div class="error">${escapeHtml(message)}</div>
+                <div class="empty-state">
+                    <p>👋 Enter your Jira credentials and click "Fetch Issues" to get started</p>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Load saved credentials from localStorage (optional)
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUrl = localStorage.getItem('jiraUrl');
+            const savedEmail = localStorage.getItem('jiraEmail');
+            
+            if (savedUrl) document.getElementById('jiraUrl').value = savedUrl;
+            if (savedEmail) document.getElementById('jiraEmail').value = savedEmail;
+
+            configForm.addEventListener('submit', () => {
+                localStorage.setItem('jiraUrl', document.getElementById('jiraUrl').value);
+                localStorage.setItem('jiraEmail', document.getElementById('jiraEmail').value);
+            });
+        });
+    </script>
+</body>
+</html>
