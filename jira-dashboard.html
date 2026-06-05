@@ -312,6 +312,33 @@
         .info-box a:hover {
             text-decoration: underline;
         }
+
+        .debug-console {
+            background: #1e1e1e;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .debug-console.active {
+            display: block;
+        }
+
+        .debug-toggle {
+            background: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -334,7 +361,6 @@
                             type="url" 
                             id="basicUrl" 
                             placeholder="https://your-domain.atlassian.net"
-                            value="https://your-domain.atlassian.net"
                         >
                     </div>
                     <div class="form-group">
@@ -386,7 +412,14 @@
                             type="url" 
                             id="patUrl" 
                             placeholder="https://your-domain.atlassian.net"
-                            value="https://your-domain.atlassian.net"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="patEmail">Email (for PAT auth)</label>
+                        <input 
+                            type="email" 
+                            id="patEmail" 
+                            placeholder="your-email@example.com"
                         >
                     </div>
                     <div class="form-group">
@@ -417,7 +450,7 @@
                     <button type="submit" id="patFetchBtn">Fetch Issues</button>
                 </form>
                 <div class="info-box">
-                    💡 <strong>Personal Access Tokens (PAT):</strong> More secure than email+password. Create one in your Jira profile settings under "Security" → "Personal Access Tokens"
+                    💡 <strong>Personal Access Tokens (PAT):</strong> Create in your Jira profile Settings → Security → Personal Access Tokens. Use your email + token for authentication.
                 </div>
             </div>
 
@@ -430,7 +463,6 @@
                             type="url" 
                             id="serverUrl" 
                             placeholder="https://your-domain.atlassian.net"
-                            value="https://your-domain.atlassian.net"
                         >
                     </div>
                     <div class="form-group">
@@ -461,7 +493,7 @@
                     <button type="submit" id="serverFetchBtn">Fetch Issues</button>
                 </form>
                 <div class="info-box">
-                    🔒 <strong>Server-Side Proxy (Recommended for Production):</strong> Use a backend service to handle Jira API requests. This avoids CORS issues and keeps credentials secure.
+                    🔒 <strong>Server-Side Proxy (Recommended):</strong> Use a backend service to handle Jira API requests securely.
                 </div>
             </div>
         </header>
@@ -471,14 +503,30 @@
                 <p>👋 Select authentication method and click "Fetch Issues" to get started</p>
             </div>
         </div>
+
+        <button class="debug-toggle" onclick="toggleDebug()">📋 Show Debug Console</button>
+        <div id="debugConsole" class="debug-console">
+            <div id="debugLog"></div>
+        </div>
     </div>
 
     <script>
         const contentDiv = document.getElementById('content');
+        const debugLog = document.getElementById('debugLog');
+
+        function log(message) {
+            console.log(message);
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.innerHTML += `[${timestamp}] ${message}<br>`;
+            debugLog.parentElement.scrollTop = debugLog.parentElement.scrollHeight;
+        }
+
+        function toggleDebug() {
+            document.getElementById('debugConsole').classList.toggle('active');
+        }
 
         // Tab switching
         function switchTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -486,7 +534,6 @@
                 btn.classList.remove('active');
             });
 
-            // Show selected tab
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
@@ -533,8 +580,9 @@
 
             const query = jql ? `?jql=${encodeURIComponent(jql)}&maxResults=100` : '?maxResults=100';
             const apiUrl = `${cleanUrl}/rest/api/3/search${query}`;
-
             const credentials = btoa(`${email}:${token}`);
+
+            log(`📤 Basic Auth: ${apiUrl}`);
 
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -549,14 +597,13 @@
                     throw new Error('Unauthorized: Check your email and API token');
                 } else if (response.status === 404) {
                     throw new Error('Jira instance not found: Check your URL');
-                } else if (response.status === 0) {
-                    throw new Error('CORS Error: Your browser blocked the request. Use Personal Access Token or Server Proxy method instead.');
                 } else {
                     throw new Error(`Jira API error: ${response.status}`);
                 }
             }
 
             const data = await response.json();
+            log(`✅ Fetched ${data.issues?.length || 0} issues`);
             return data.issues || [];
         }
 
@@ -565,12 +612,13 @@
             e.preventDefault();
 
             const jiraUrl = document.getElementById('patUrl').value.trim();
+            const patEmail = document.getElementById('patEmail').value.trim();
             const patToken = document.getElementById('patToken').value.trim();
             const projectKey = document.getElementById('patProject').value.trim();
             const statusFilter = document.getElementById('patStatus').value;
 
-            if (!jiraUrl || !patToken) {
-                showError('Please fill in Jira URL and Personal Access Token');
+            if (!jiraUrl || !patEmail || !patToken) {
+                showError('Please fill in Jira URL, Email, and Personal Access Token');
                 return;
             }
 
@@ -579,7 +627,7 @@
             contentDiv.innerHTML = '<div class="loading">⏳ Fetching issues from Jira...</div>';
 
             try {
-                const issues = await fetchJiraWithPAT(jiraUrl, patToken, projectKey, statusFilter);
+                const issues = await fetchJiraWithPAT(jiraUrl, patEmail, patToken, projectKey, statusFilter);
                 displayIssues(issues, jiraUrl);
             } catch (error) {
                 showError(`Error: ${error.message}`);
@@ -588,7 +636,7 @@
             }
         });
 
-        async function fetchJiraWithPAT(jiraUrl, patToken, projectKey, statusFilter) {
+        async function fetchJiraWithPAT(jiraUrl, email, patToken, projectKey, statusFilter) {
             const cleanUrl = jiraUrl.endsWith('/') ? jiraUrl.slice(0, -1) : jiraUrl;
             
             let jql = '';
@@ -602,27 +650,33 @@
             const query = jql ? `?jql=${encodeURIComponent(jql)}&maxResults=100` : '?maxResults=100';
             const apiUrl = `${cleanUrl}/rest/api/3/search${query}`;
 
+            // PAT uses Basic Auth like API tokens
+            const credentials = btoa(`${email}:${patToken}`);
+
+            log(`📤 PAT Auth: ${apiUrl}`);
+            log(`🔐 Using email: ${email}`);
+
             const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${patToken}`,
+                    'Authorization': `Basic ${credentials}`,
                     'Accept': 'application/json',
                 }
             });
 
             if (!response.ok) {
+                log(`❌ Error ${response.status}`);
                 if (response.status === 401) {
-                    throw new Error('Unauthorized: Check your Personal Access Token');
+                    throw new Error('Unauthorized: Check your email and Personal Access Token');
                 } else if (response.status === 404) {
                     throw new Error('Jira instance not found: Check your URL');
-                } else if (response.status === 0) {
-                    throw new Error('CORS Error: Use Server Proxy method instead.');
                 } else {
                     throw new Error(`Jira API error: ${response.status}`);
                 }
             }
 
             const data = await response.json();
+            log(`✅ Fetched ${data.issues?.length || 0} issues`);
             return data.issues || [];
         }
 
@@ -663,6 +717,8 @@
                 jql += (jql ? ' AND ' : '') + `status = "${statusFilter}"`;
             }
 
+            log(`📤 Proxy: ${proxyUrl}`);
+
             const response = await fetch(proxyUrl, {
                 method: 'POST',
                 headers: {
@@ -681,6 +737,7 @@
             }
 
             const data = await response.json();
+            log(`✅ Fetched ${data.issues?.length || 0} issues`);
             return data.issues || [];
         }
 
@@ -697,7 +754,6 @@
 
             const cleanUrl = jiraUrl.endsWith('/') ? jiraUrl.slice(0, -1) : jiraUrl;
 
-            // Calculate stats
             const stats = {
                 total: issues.length,
                 todo: issues.filter(i => i.fields.status.name === 'To Do').length,
@@ -778,7 +834,7 @@
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // Load saved credentials from localStorage
+        // Load saved credentials
         window.addEventListener('DOMContentLoaded', () => {
             const savedUrl = localStorage.getItem('jiraUrl');
             const savedEmail = localStorage.getItem('jiraEmail');
@@ -791,12 +847,14 @@
             }
             if (savedEmail) {
                 document.getElementById('basicEmail').value = savedEmail;
+                document.getElementById('patEmail').value = savedEmail;
             }
             if (savedProxyUrl) {
                 document.getElementById('proxyUrl').value = savedProxyUrl;
             }
 
-            // Save on submit
+            log('🚀 Jira Dashboard loaded');
+
             document.getElementById('basicForm').addEventListener('submit', () => {
                 localStorage.setItem('jiraUrl', document.getElementById('basicUrl').value);
                 localStorage.setItem('jiraEmail', document.getElementById('basicEmail').value);
@@ -804,6 +862,7 @@
 
             document.getElementById('patForm').addEventListener('submit', () => {
                 localStorage.setItem('jiraUrl', document.getElementById('patUrl').value);
+                localStorage.setItem('jiraEmail', document.getElementById('patEmail').value);
             });
 
             document.getElementById('serverForm').addEventListener('submit', () => {
