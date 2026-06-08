@@ -12,10 +12,11 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
             min-height: 100vh;
-            padding: 20px;
+            padding: 32px 16px;
         }
 
         .container {
@@ -25,38 +26,52 @@
 
         header {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 2px;
+            margin-bottom: 32px;
+            border-top: 6px solid #0051ba;
         }
 
         header h1 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 32px;
         }
 
         .auth-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
+            gap: 0;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .tab-btn {
-            padding: 12px 20px;
+            padding: 16px 20px;
             background: none;
             border: none;
             cursor: pointer;
-            font-weight: 600;
-            color: #999;
+            font-weight: 500;
+            color: #666;
             border-bottom: 3px solid transparent;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .tab-btn:hover {
+            color: #0051ba;
         }
 
         .tab-btn.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
+            color: #0051ba;
+            border-bottom-color: #0051ba;
         }
 
         .tab-content {
@@ -68,224 +83,254 @@
         }
 
         .config-form {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
 
         .form-group label {
-            font-size: 14px;
-            color: #555;
+            font-size: 13px;
+            color: #1a1a1a;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .form-group input,
         .form-group select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
+            padding: 10px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 2px;
+            font-size: 13px;
+            background: white;
+            color: #1a1a1a;
+            transition: border-color 0.2s;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #0051ba;
         }
 
         button {
             padding: 10px 20px;
-            background: #667eea;
+            background: #0051ba;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 2px;
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.3s;
-            align-self: flex-end;
+            font-size: 13px;
+            transition: background 0.2s;
+            align-self: flex-start;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         button:hover {
-            background: #5568d3;
+            background: #003a7a;
+        }
+
+        button:active {
+            background: #002c5f;
         }
 
         button:disabled {
-            background: #ccc;
+            background: #d0d0d0;
             cursor: not-allowed;
         }
 
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             background: white;
-            border-radius: 10px;
-            color: #667eea;
+            color: #0051ba;
             font-weight: 600;
+            font-size: 16px;
         }
 
         .error {
-            background: #fee;
-            color: #c33;
+            background: #fff0f0;
+            color: #c41e3a;
             padding: 20px;
-            border-radius: 10px;
+            border-left: 4px solid #c41e3a;
             margin-bottom: 20px;
-            border-left: 4px solid #c33;
+            border-radius: 2px;
         }
 
         .success {
-            background: #d4edda;
-            color: #155724;
+            background: #f0f7ff;
+            color: #0051ba;
             padding: 15px;
-            border-radius: 10px;
+            border-left: 4px solid #0051ba;
             margin-bottom: 20px;
-            border-left: 4px solid #155724;
+            border-radius: 2px;
         }
 
         .issues-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .issue-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 2px;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e0e0e0;
+            transition: box-shadow 0.2s, border-color 0.2s;
         }
 
         .issue-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+            border-color: #0051ba;
+            box-shadow: 0 2px 8px rgba(0, 81, 186, 0.1);
         }
 
         .issue-key {
             display: inline-block;
-            background: #667eea;
-            color: white;
+            background: #f0f0f0;
+            color: #0051ba;
             padding: 4px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: 600;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 700;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .issue-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-            line-height: 1.4;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
 
         .issue-meta {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            font-size: 13px;
+            font-size: 12px;
             color: #666;
+        }
+
+        .issue-meta strong {
+            color: #1a1a1a;
         }
 
         .status {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 3px;
+            padding: 3px 8px;
+            border-radius: 2px;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .status.todo {
-            background: #f0f0f0;
-            color: #333;
+            background: #f5f5f5;
+            color: #666;
         }
 
         .status.in-progress {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff3d6;
+            color: #8d6f1f;
         }
 
         .status.done {
-            background: #d4edda;
-            color: #155724;
+            background: #e8f5e9;
+            color: #1b5e20;
         }
 
         .priority {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 3px;
+            padding: 3px 8px;
+            border-radius: 2px;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .priority.high {
-            background: #f8d7da;
-            color: #721c24;
+            background: #ffebee;
+            color: #c41e3a;
         }
 
         .priority.medium {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff3d6;
+            color: #8d6f1f;
         }
 
         .priority.low {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #e0f2f1;
+            color: #004d40;
         }
 
         .issue-link {
             display: inline-block;
             margin-top: 12px;
-            color: #667eea;
+            color: #0051ba;
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.3s;
+            font-size: 12px;
+            transition: color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .issue-link:hover {
-            color: #5568d3;
+            color: #003a7a;
             text-decoration: underline;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
             background: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 2px;
+            border: 1px solid #e0e0e0;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .stat-value {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            color: #667eea;
+            color: #0051ba;
         }
 
         .stat-label {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
-            margin-top: 5px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 600;
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #999;
+            background: white;
+            color: #666;
+            border-radius: 2px;
         }
 
         .empty-state p {
@@ -294,17 +339,18 @@
         }
 
         .info-box {
-            background: #e8f4fd;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 5px;
+            background: #f0f7ff;
+            border-left: 4px solid #0051ba;
+            padding: 16px;
+            margin-top: 16px;
+            border-radius: 2px;
             font-size: 13px;
             color: #333;
+            line-height: 1.6;
         }
 
         .info-box a {
-            color: #667eea;
+            color: #0051ba;
             text-decoration: none;
             font-weight: 600;
         }
@@ -314,13 +360,13 @@
         }
 
         .debug-console {
-            background: #1e1e1e;
-            color: #0f0;
-            padding: 15px;
-            border-radius: 5px;
+            background: #1a1a1a;
+            color: #4caf50;
+            padding: 12px;
+            border-radius: 2px;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
-            margin-top: 15px;
+            font-size: 11px;
+            margin-top: 16px;
             max-height: 200px;
             overflow-y: auto;
             display: none;
@@ -331,25 +377,34 @@
         }
 
         .debug-toggle {
-            background: #333;
+            background: #555;
             color: #fff;
             padding: 8px 12px;
-            border-radius: 3px;
+            border-radius: 2px;
             cursor: pointer;
             font-size: 12px;
-            margin-top: 10px;
+            margin-top: 20px;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .debug-toggle:hover {
+            background: #333;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📊 Jira Dashboard</h1>
+            <h1>Jira Dashboard</h1>
+            <p class="header-subtitle">Manage your work in progress, simply and beautifully.</p>
             
             <div class="auth-tabs">
                 <button class="tab-btn active" onclick="switchTab('basic')">Basic Auth</button>
                 <button class="tab-btn" onclick="switchTab('pat')">Personal Access Token</button>
-                <button class="tab-btn" onclick="switchTab('server')">Server-Side Proxy</button>
+                <button class="tab-btn" onclick="switchTab('server')">Server Proxy</button>
             </div>
 
             <!-- Basic Auth Tab -->
@@ -380,7 +435,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="basicProject">Project Key (optional)</label>
+                        <label for="basicProject">Project Key <span style="font-weight: 400;">(optional)</span></label>
                         <input 
                             type="text" 
                             id="basicProject" 
@@ -388,7 +443,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="basicStatus">Status Filter (optional)</label>
+                        <label for="basicStatus">Status Filter <span style="font-weight: 400;">(optional)</span></label>
                         <select id="basicStatus">
                             <option value="">All Statuses</option>
                             <option value="To Do">To Do</option>
@@ -396,10 +451,10 @@
                             <option value="Done">Done</option>
                         </select>
                     </div>
-                    <button type="submit" id="basicFetchBtn">Fetch Issues</button>
                 </form>
+                <button type="submit" form="basicForm" id="basicFetchBtn">Get Your Issues</button>
                 <div class="info-box">
-                    ⚠️ <strong>Note:</strong> Basic Auth may have CORS restrictions. Get your API token: <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">Atlassian API Tokens</a>
+                    Create your API token in <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">Atlassian Account Settings</a> and use it here. It's quick and straightforward.
                 </div>
             </div>
 
@@ -415,7 +470,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="patEmail">Email (for PAT auth)</label>
+                        <label for="patEmail">Email</label>
                         <input 
                             type="email" 
                             id="patEmail" 
@@ -431,7 +486,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="patProject">Project Key (optional)</label>
+                        <label for="patProject">Project Key <span style="font-weight: 400;">(optional)</span></label>
                         <input 
                             type="text" 
                             id="patProject" 
@@ -439,7 +494,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="patStatus">Status Filter (optional)</label>
+                        <label for="patStatus">Status Filter <span style="font-weight: 400;">(optional)</span></label>
                         <select id="patStatus">
                             <option value="">All Statuses</option>
                             <option value="To Do">To Do</option>
@@ -447,10 +502,10 @@
                             <option value="Done">Done</option>
                         </select>
                     </div>
-                    <button type="submit" id="patFetchBtn">Fetch Issues</button>
                 </form>
+                <button type="submit" form="patForm" id="patFetchBtn">Get Your Issues</button>
                 <div class="info-box">
-                    💡 <strong>Personal Access Tokens (PAT):</strong> Create in your Jira profile Settings → Security → Personal Access Tokens. Use your email + token for authentication.
+                    Personal Access Tokens offer enhanced control. Create one in your Jira profile under Security settings, then pair it with your email for safe access.
                 </div>
             </div>
 
@@ -474,7 +529,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="serverProject">Project Key (optional)</label>
+                        <label for="serverProject">Project Key <span style="font-weight: 400;">(optional)</span></label>
                         <input 
                             type="text" 
                             id="serverProject" 
@@ -482,7 +537,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="serverStatus">Status Filter (optional)</label>
+                        <label for="serverStatus">Status Filter <span style="font-weight: 400;">(optional)</span></label>
                         <select id="serverStatus">
                             <option value="">All Statuses</option>
                             <option value="To Do">To Do</option>
@@ -490,21 +545,21 @@
                             <option value="Done">Done</option>
                         </select>
                     </div>
-                    <button type="submit" id="serverFetchBtn">Fetch Issues</button>
                 </form>
+                <button type="submit" form="serverForm" id="serverFetchBtn">Get Your Issues</button>
                 <div class="info-box">
-                    🔒 <strong>Server-Side Proxy (Recommended):</strong> Use a backend service to handle Jira API requests securely.
+                    For maximum security and reliability, use a server-side proxy. Your backend handles all authentication—simple, safe, and smart.
                 </div>
             </div>
         </header>
 
         <div id="content">
             <div class="empty-state">
-                <p>👋 Select authentication method and click "Fetch Issues" to get started</p>
+                <p>Choose an authentication method above and fetch your issues to get started.</p>
             </div>
         </div>
 
-        <button class="debug-toggle" onclick="toggleDebug()">📋 Show Debug Console</button>
+        <button class="debug-toggle" onclick="toggleDebug()">Debug Console</button>
         <div id="debugConsole" class="debug-console">
             <div id="debugLog"></div>
         </div>
@@ -549,19 +604,19 @@
             const statusFilter = document.getElementById('basicStatus').value;
 
             if (!jiraUrl || !jiraEmail || !jiraToken) {
-                showError('Please fill in Jira URL, Email, and API Token');
+                showError('Please enter your Jira URL, email, and API token.');
                 return;
             }
 
             const basicFetchBtn = document.getElementById('basicFetchBtn');
             basicFetchBtn.disabled = true;
-            contentDiv.innerHTML = '<div class="loading">⏳ Fetching issues from Jira...</div>';
+            contentDiv.innerHTML = '<div class="loading">Fetching your issues...</div>';
 
             try {
                 const issues = await fetchJiraBasicAuth(jiraUrl, jiraEmail, jiraToken, projectKey, statusFilter);
                 displayIssues(issues, jiraUrl);
             } catch (error) {
-                showError(`Error: ${error.message}`);
+                showError(`Something went wrong: ${error.message}`);
             } finally {
                 basicFetchBtn.disabled = false;
             }
@@ -582,7 +637,7 @@
             const apiUrl = `${cleanUrl}/rest/api/3/search${query}`;
             const credentials = btoa(`${email}:${token}`);
 
-            log(`📤 Basic Auth: ${apiUrl}`);
+            log(`Authenticating with basic auth...`);
 
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -594,16 +649,16 @@
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    throw new Error('Unauthorized: Check your email and API token');
+                    throw new Error('Your email or API token is incorrect.');
                 } else if (response.status === 404) {
-                    throw new Error('Jira instance not found: Check your URL');
+                    throw new Error('We could not find your Jira instance. Please check the URL.');
                 } else {
-                    throw new Error(`Jira API error: ${response.status}`);
+                    throw new Error(`Jira returned an error (${response.status}). Please try again.`);
                 }
             }
 
             const data = await response.json();
-            log(`✅ Fetched ${data.issues?.length || 0} issues`);
+            log(`Found ${data.issues?.length || 0} issues.`);
             return data.issues || [];
         }
 
@@ -618,19 +673,19 @@
             const statusFilter = document.getElementById('patStatus').value;
 
             if (!jiraUrl || !patEmail || !patToken) {
-                showError('Please fill in Jira URL, Email, and Personal Access Token');
+                showError('Please enter your Jira URL, email, and personal access token.');
                 return;
             }
 
             const patFetchBtn = document.getElementById('patFetchBtn');
             patFetchBtn.disabled = true;
-            contentDiv.innerHTML = '<div class="loading">⏳ Fetching issues from Jira...</div>';
+            contentDiv.innerHTML = '<div class="loading">Fetching your issues...</div>';
 
             try {
                 const issues = await fetchJiraWithPAT(jiraUrl, patEmail, patToken, projectKey, statusFilter);
                 displayIssues(issues, jiraUrl);
             } catch (error) {
-                showError(`Error: ${error.message}`);
+                showError(`Something went wrong: ${error.message}`);
             } finally {
                 patFetchBtn.disabled = false;
             }
@@ -650,11 +705,9 @@
             const query = jql ? `?jql=${encodeURIComponent(jql)}&maxResults=100` : '?maxResults=100';
             const apiUrl = `${cleanUrl}/rest/api/3/search${query}`;
 
-            // PAT uses Basic Auth like API tokens
             const credentials = btoa(`${email}:${patToken}`);
 
-            log(`📤 PAT Auth: ${apiUrl}`);
-            log(`🔐 Using email: ${email}`);
+            log(`Authenticating with personal access token...`);
 
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -665,18 +718,18 @@
             });
 
             if (!response.ok) {
-                log(`❌ Error ${response.status}`);
+                log(`Error ${response.status}`);
                 if (response.status === 401) {
-                    throw new Error('Unauthorized: Check your email and Personal Access Token');
+                    throw new Error('Your email or personal access token is incorrect.');
                 } else if (response.status === 404) {
-                    throw new Error('Jira instance not found: Check your URL');
+                    throw new Error('We could not find your Jira instance. Please check the URL.');
                 } else {
-                    throw new Error(`Jira API error: ${response.status}`);
+                    throw new Error(`Jira returned an error (${response.status}). Please try again.`);
                 }
             }
 
             const data = await response.json();
-            log(`✅ Fetched ${data.issues?.length || 0} issues`);
+            log(`Found ${data.issues?.length || 0} issues.`);
             return data.issues || [];
         }
 
@@ -690,19 +743,19 @@
             const statusFilter = document.getElementById('serverStatus').value;
 
             if (!jiraUrl || !proxyUrl) {
-                showError('Please fill in Jira URL and Backend Proxy URL');
+                showError('Please enter both your Jira URL and backend proxy URL.');
                 return;
             }
 
             const serverFetchBtn = document.getElementById('serverFetchBtn');
             serverFetchBtn.disabled = true;
-            contentDiv.innerHTML = '<div class="loading">⏳ Fetching issues from Jira via proxy...</div>';
+            contentDiv.innerHTML = '<div class="loading">Fetching your issues...</div>';
 
             try {
                 const issues = await fetchJiraViaProxy(proxyUrl, jiraUrl, projectKey, statusFilter);
                 displayIssues(issues, jiraUrl);
             } catch (error) {
-                showError(`Error: ${error.message}`);
+                showError(`Something went wrong: ${error.message}`);
             } finally {
                 serverFetchBtn.disabled = false;
             }
@@ -717,7 +770,7 @@
                 jql += (jql ? ' AND ' : '') + `status = "${statusFilter}"`;
             }
 
-            log(`📤 Proxy: ${proxyUrl}`);
+            log(`Connecting via proxy...`);
 
             const response = await fetch(proxyUrl, {
                 method: 'POST',
@@ -733,11 +786,11 @@
 
             if (!response.ok) {
                 const error = await response.json().catch(() => ({}));
-                throw new Error(error.message || `Proxy error: ${response.status}`);
+                throw new Error(error.message || `The proxy returned an error (${response.status}). Please try again.`);
             }
 
             const data = await response.json();
-            log(`✅ Fetched ${data.issues?.length || 0} issues`);
+            log(`Found ${data.issues?.length || 0} issues.`);
             return data.issues || [];
         }
 
@@ -746,7 +799,7 @@
             if (issues.length === 0) {
                 contentDiv.innerHTML = `
                     <div class="empty-state">
-                        <p>📭 No issues found matching your filters</p>
+                        <p>No issues found. Try adjusting your filters.</p>
                     </div>
                 `;
                 return;
@@ -800,11 +853,11 @@
                         <div class="issue-meta">
                             <div><strong>Status:</strong> <span class="status ${statusClass}">${status}</span></div>
                             <div><strong>Priority:</strong> <span class="priority ${priorityClass}">${priority}</span></div>
-                            <div><strong>Assignee:</strong> ${escapeHtml(assignee)}</div>
-                            <div><strong>Due Date:</strong> ${dueDate}</div>
+                            <div><strong>Assigned to:</strong> ${escapeHtml(assignee)}</div>
+                            <div><strong>Due:</strong> ${dueDate}</div>
                         </div>
                         <a href="${cleanUrl}/browse/${issue.key}" target="_blank" class="issue-link">
-                            View in Jira →
+                            View in Jira
                         </a>
                     </div>
                 `;
@@ -818,7 +871,7 @@
             contentDiv.innerHTML = `
                 <div class="error">${escapeHtml(message)}</div>
                 <div class="empty-state">
-                    <p>👋 Try a different authentication method or check your settings</p>
+                    <p>Please check your settings and try again, or contact support.</p>
                 </div>
             `;
         }
@@ -853,7 +906,7 @@
                 document.getElementById('proxyUrl').value = savedProxyUrl;
             }
 
-            log('🚀 Jira Dashboard loaded');
+            log('Dashboard loaded.');
 
             document.getElementById('basicForm').addEventListener('submit', () => {
                 localStorage.setItem('jiraUrl', document.getElementById('basicUrl').value);
